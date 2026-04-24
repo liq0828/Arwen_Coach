@@ -1,0 +1,16 @@
+[
+  {"topic": "Life cycles: all living things go through birth, growth, reproduction, and death (e.g. frog: egg→tadpole→froglet→frog)", "strand": "life_science", "ngss": "3-LS1-1"},
+  {"topic": "What plants need to grow: sunlight, water, air, nutrients from soil", "strand": "life_science", "ngss": "3-LS1"},
+  {"topic": "Parts of a plant and their jobs: roots (absorb water), stem (support/transport), leaves (make food), flower (reproduction)", "strand": "life_science", "ngss": "3-LS1"},
+  {"topic": "Food chains: producer (plant) → primary consumer → secondary consumer → predator (e.g. grass→rabbit→fox)", "strand": "life_science", "ngss": "3-LS2-1"},
+  {"topic": "Animal groups: mammals, birds, reptiles, amphibians, fish, insects — what makes each group different", "strand": "life_science", "ngss": "3-LS4"},
+  {"topic": "Skeletons and muscles: humans have an endoskeleton; some animals have exoskeletons (e.g. insects, crabs)", "strand": "life_science", "ngss": "3-LS1"},
+  {"topic": "Forces: push and pull; gravity pulls objects down; friction slows things down", "strand": "physical_science", "ngss": "3-PS2-1"},
+  {"topic": "Magnets: attract iron/steel, have north and south poles; opposite poles attract, same poles repel", "strand": "physical_science", "ngss": "3-PS2-3"},
+  {"topic": "Light: travels in straight lines; we see objects because light reflects off them; opaque objects make shadows", "strand": "physical_science", "ngss": "1-PS4-2"},
+  {"topic": "States of matter: solid (fixed shape), liquid (takes shape of container), gas (fills all space)", "strand": "physical_science", "ngss": "2-PS1-1"},
+  {"topic": "Rocks: igneous (from volcanoes), sedimentary (from layers), metamorphic (changed by heat/pressure); fossils form in sedimentary rock", "strand": "earth_science", "ngss": "2-ESS1"},
+  {"topic": "Weather and seasons: temperature, rainfall, and daylight hours change with seasons; UK has 4 seasons", "strand": "earth_science", "ngss": "3-ESS2-1"},
+  {"topic": "Changing materials: some changes are reversible (melting ice) and some are irreversible (burning, cooking)", "strand": "physical_science", "ngss": "2-PS1-4"},
+  {"topic": "The water cycle: evaporation → condensation → precipitation → collection (rain fills rivers and seas)", "strand": "earth_science", "ngss": "3-ESS2"}
+]

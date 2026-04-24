@@ -1,0 +1,30 @@
+{
+  "year3": [
+    "multiplication facts (e.g. 7×8)",
+    "addition within 1000",
+    "subtraction within 1000",
+    "division facts (e.g. 24÷6)",
+    "two-digit × one-digit (e.g. 23×4)",
+    "missing number (e.g. 5×? = 35)",
+    "compare numbers (e.g. which is bigger: 347 or 374?)",
+    "simple word problem (Year 3)",
+    "place value (e.g. value of 4 in 347?)",
+    "number sequences (e.g. 5, 10, 15, ?)",
+    "halving and doubling",
+    "simple fractions (e.g. half of 20)"
+  ],
+  "year4": [
+    "multi-digit × one-digit (e.g. 1234×6)",
+    "two-digit × two-digit (e.g. 23×45)",
+    "division with remainders (e.g. 47÷5)",
+    "factor pairs (e.g. list all factors of 24)",
+    "multiples (e.g. is 36 a multiple of 4?)",
+    "prime or composite (e.g. is 17 prime?)",
+    "unit conversion (e.g. 3 km = ? m)",
+    "multi-step word problem (Year 4)",
+    "rounding to nearest 100 or 1000",
+    "equivalent fractions (e.g. ½ = ?/4)",
+    "compare fractions (e.g. which is bigger: ⅔ or ¾?)",
+    "add and subtract fractions with same denominator"
+  ]
+}

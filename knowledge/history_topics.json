@@ -1,0 +1,10 @@
+[
+  {"topic": "Great Fire of London: started 1666, began in a bakery on Pudding Lane, destroyed much of the City", "era": "early_modern"},
+  {"topic": "Ancient Egypt: pyramids, pharaohs, River Nile, mummies, hieroglyphics", "era": "ancient"},
+  {"topic": "Florence Nightingale: famous nurse in the Crimean War, known as the Lady with the Lamp", "era": "victorian"},
+  {"topic": "Guy Fawkes and the Gunpowder Plot: 1605, tried to blow up the Houses of Parliament", "era": "early_modern"},
+  {"topic": "Neil Armstrong: first person on the Moon, 1969, Apollo 11 mission", "era": "modern"},
+  {"topic": "Queen Victoria: reigned 1837–1901, the Victorian era, longest-reigning monarch at the time", "era": "victorian"},
+  {"topic": "The Tudors: Henry VIII had six wives; his daughter became Elizabeth I", "era": "tudor"},
+  {"topic": "Stone Age → Bronze Age → Iron Age: order of early human history in Britain", "era": "prehistoric"}
+]
