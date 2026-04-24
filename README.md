@@ -1,102 +1,84 @@
-# Arwen Coach 🎓
+# ArwenGo 🌟
 
-An AI-powered learning coach for Jinny (UK Year 3, age 8), built as a Claude Artifact.
+A personalised AI learning coach for Jinny (age 8, UK Year 3), built as a Claude React artifact.
 
 ## What it does
 
-Arwen is a warm, encouraging study coach that runs a daily quiz session covering five core subjects plus optional bonus rounds. Points and streaks persist across sessions via `window.storage`.
+ArwenGo runs a daily quiz across five core subjects in order, then offers an optional bonus round:
 
-## Subjects
+1. **English** - Year 3 vocabulary in sentence form
+2. **Maths** - Adaptive: starts with Year 3 topics and levels up to Year 4 on first-try success
+3. **Science** - UK Year 3/4-aligned A/B/C questions
+4. **Chinese** - Character + pinyin recognition
+5. **Spanish** - Vocabulary recognition
+6. **Bonus round** - Geography 🌍, History 📜, or Music 🥁
 
-### Core (every session)
-| Subject | Format | Notes |
-|---------|--------|-------|
-| English | Write a sentence using a given word | Vocabulary from `english_word_bank.json` |
-| Maths | Single question | Adaptive: Year 3 → Year 4 on first-try correct |
-| Science | A/B/C multiple choice | Aligned to NGSS Grade 3 + UK Year 3/4 |
-| Chinese | A/B/C — what does this character mean? | Beginner recognition, pinyin shown |
-| Spanish | A/B/C — what does this word mean? | Starter vocabulary |
+## Features
 
-### Bonus (offered after core, player picks one)
-- Geography 🌍 — UK, European, and world capitals; continents; oceans
-- History 📜 — UK Year 3/4 history topics (Great Fire, Ancient Egypt, Tudors…)
-- Music 🥁 — note values, drum kit, time signatures, dynamics, tempo
+- Persistent points and day-streak tracking
+- Checkpoint protection to avoid score regression
+- Adaptive maths difficulty
+- Warm, encouraging coach persona ("Arwen")
+- Pause / resume flow
+- Parent progress report mode (`progress`, `report`, `weak`)
+- Subject badges and quick-launch buttons for science and bonus rounds
+- Timed storage reads/writes with fallback to `localStorage` when Claude artifact storage is unavailable
 
-## Points system
+## Tech stack
 
-| Result | Points |
-|--------|--------|
-| Correct first try | 8 |
-| Correct / partial on retry | 7 |
-| Engaged but wrong | 5 |
-| Follow-up correct bonus | +2 |
-| Daily streak bonus | +1 to +7 |
+- React artifact component in [arwen_coach.jsx](./arwen_coach.jsx)
+- Anthropic Messages API (`claude-sonnet-4-20250514`) called from the artifact component
+- `window.storage` for persistent score data inside Claude artifacts
+- `localStorage` fallback for persistence when artifact storage is unavailable
 
-Points never decrease. Streak increments each day a full session is completed.
+## Word banks and topics
 
-## Storage keys
+The current artifact keeps its banks inline inside `arwen_coach.jsx` for portability:
 
-| Key | Contents |
-|-----|----------|
-| `jinny:stats` | `{ totalPoints, streak, lastSaved }` — updated after every question |
-| `jinny:checkpoint` | `{ totalPoints, streak, savedAt }` — updated only on session complete |
-| `jinny:lastSession` | Date string of last completed session — used to compute streak |
+- 39 English vocabulary words
+- 67 Chinese characters / words with pinyin
+- 47 Spanish vocabulary items
+- Year 3 and Year 4 maths topic lists
+- Science, Geography, History, and Music topic lists
 
-Seed baseline: **197 pts, streak 1** (2026-04-20). On first load, the app takes the max of checkpoint and stats to prevent regression.
+The repository also includes mirrored JSON files in [`knowledge/`](./knowledge) for easier editing and future extraction:
 
-## Adaptive maths
-
-The coach starts every session with Year 3 topics (`math_topics.json → year3`). If Jinny answers correctly on the first try, the next maths question is drawn from Year 4 (`year4`) and Arwen says *"Level up! 🌟"*. A wrong answer keeps her at the current level.
-
-## Knowledge files
-
-All word banks and topic lists live in `knowledge/` as plain JSON — easy to extend without touching the main artifact code.
-
-```
+```text
 knowledge/
-├── english_word_bank.json   # Year 3 vocabulary (word + level + topics)
-├── chinese_bank.json        # Characters with meaning + pinyin + stage
-├── spanish_bank.json        # Starter vocabulary
-├── math_topics.json         # { year3: [...], year4: [...] }
-├── science_topics.json      # Topics with NGSS code references
+├── english_word_bank.json
+├── chinese_bank.json
+├── spanish_bank.json
+├── math_topics.json
+├── science_topics.json
 ├── geography_topics.json
 ├── history_topics.json
 └── music_topics.json
 ```
 
-To add a new word or topic, just append a line to the relevant JSON file and update the corresponding array inside `arwen_coach.jsx`.
+## Scoring
 
-## Standards alignment
+| Result | Points |
+|---|---|
+| Correct first try | 8 pts |
+| Correct / partial second try | 7 pts |
+| Engaged but wrong both times | 5 pts |
+| Follow-up bonus | +2 pts |
+| Streak bonus (up to 7 days) | +1-7 pts |
 
-Science topics are cross-referenced to NGSS (Next Generation Science Standards) codes, validated against the [Learning Commons Knowledge Graph](https://kg.mcp.learningcommons.org) (Chan Zuckerberg Initiative × Anthropic). NGSS Grade 3 topics map closely to the UK National Curriculum Year 3/4 science programme of study.
+## Storage
 
-Maths topics align to CCSS Grade 3–4 (Common Core), which overlaps strongly with UK Year 3–4 expectations.
+The app uses these keys for progress:
 
-## How to use
+| Key | Contents |
+|---|---|
+| `jinny:stats` | Running total, streak, and last save time |
+| `jinny:checkpoint` | Session-complete snapshot |
+| `jinny:lastSession` | Date of the last completed session |
 
-1. Open `arwen_coach.jsx` as a Claude Artifact (save to your Artifacts library for easy access)
-2. Hit **Start quiz ▶**
-3. Complete all five core subjects
-4. Pick a bonus subject or skip
-5. Points save automatically
+Seed baseline: **197 points, streak 1**. On load, the app prefers the higher of checkpoint and running stats to avoid regressions.
 
-## Tech
+## Notes
 
-- React 18 (via esm.sh)
-- Anthropic API (`api.anthropic.com/v1/messages`, model: `claude-sonnet-4-20250514`)
-- `window.storage` for persistence (Claude Artifact storage, synced to account)
-- No external dependencies beyond React
-
-## Project status
-
-| Feature | Status |
-|---------|--------|
-| Core 5 subjects | ✅ |
-| Bonus 3 subjects | ✅ |
-| Adaptive maths difficulty | ✅ |
-| Points + streak persistence | ✅ |
-| Checkpoint anti-regression | ✅ |
-| Subject badges in chat | ✅ |
-| Parent progress query | ✅ |
-| Weekly report | 🔜 |
-| Per-subject weak-area tracking | 🔜 |
+- The exported component name is `ArwenGo`, while the repo entry file remains `arwen_coach.jsx`
+- The app is designed first for Claude.ai artifacts
+- If you run it outside Claude, persistence can fall back to `localStorage`, but you will still need to adapt the Anthropic API call for your environment

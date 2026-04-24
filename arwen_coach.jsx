@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
-// ═══════════════════════════════════════════════════
-// WORD BANKS — add new entries here easily!
-// ═══════════════════════════════════════════════════
-
+// Word banks live inline for Claude artifact portability. The repo also keeps
+// mirrored JSON files in knowledge/ for easier editing and future extraction.
 const ENGLISH_BANK = [
   {word:"curious"},{word:"disappointed"},{word:"careful"},{word:"delicious"},
   {word:"brave"},{word:"quiet"},{word:"noisy"},{word:"suddenly"},
@@ -81,7 +79,6 @@ const SPANISH_BANK = [
   {item:"árbol",meaning:"tree"}
 ];
 
-// Adaptive math: G3 default, level up to G4 on first-try correct
 const MATH_TOPICS_G3 = [
   "multiplication facts (e.g. 7×8)",
   "addition within 1000",
@@ -112,29 +109,23 @@ const MATH_TOPICS_G4 = [
   "add and subtract fractions with same denominator"
 ];
 
-// Science — aligned to NGSS Grade 3 + UK Year 3/4 national curriculum
 const SCIENCE_TOPICS = [
-  // Life Science (NGSS 3-LS1, 3-LS2, 3-LS4 / UK: plants, animals)
   "Life cycles: all living things go through birth, growth, reproduction, and death (e.g. frog: egg→tadpole→froglet→frog)",
   "What plants need to grow: sunlight, water, air, nutrients from soil",
   "Parts of a plant and their jobs: roots (absorb water), stem (support/transport), leaves (make food), flower (reproduction)",
   "Food chains: producer (plant) → primary consumer → secondary consumer → predator (e.g. grass→rabbit→fox)",
   "Animal groups: mammals, birds, reptiles, amphibians, fish, insects — what makes each group different",
   "Skeletons and muscles: humans have an endoskeleton; some animals have exoskeletons (e.g. insects, crabs)",
-  // Physical Science (NGSS 3-PS2 / UK: forces, light, magnets)
   "Forces: push and pull; gravity pulls objects down; friction slows things down",
   "Magnets: attract iron/steel, have north and south poles; opposite poles attract, same poles repel",
   "Light: travels in straight lines; we see objects because light reflects off them; opaque objects make shadows",
   "States of matter: solid (fixed shape), liquid (takes shape of container), gas (fills all space)",
-  // Earth Science (NGSS 3-ESS2 / UK: rocks, weather)
   "Rocks: igneous (from volcanoes), sedimentary (from layers), metamorphic (changed by heat/pressure); fossils form in sedimentary rock",
   "Weather and seasons: temperature, rainfall, and daylight hours change with seasons; UK has 4 seasons",
-  // Simple chemistry (UK Year 4)
   "Changing materials: some changes are reversible (melting ice) and some are irreversible (burning, cooking)",
   "The water cycle: evaporation → condensation → precipitation → collection (rain fills rivers and seas)"
 ];
 
-// Bonus subjects
 const GEOGRAPHY_TOPICS = [
   "UK countries and capitals: England→London, Scotland→Edinburgh, Wales→Cardiff, Northern Ireland→Belfast",
   "European capitals: France→Paris, Germany→Berlin, Italy→Rome, Spain→Madrid, Portugal→Lisbon",
@@ -166,14 +157,10 @@ const MUSIC_TOPICS = [
   "Trinity Rock & Pop drum grades: Grade 1 (beginner) up to Grade 8 (advanced); Grade 5 is intermediate"
 ];
 
-// ═══════════════════════════════════════════════════
-// SYSTEM PROMPT
-// ═══════════════════════════════════════════════════
-
 function buildSystemPrompt(streak) {
-  return `You are Arwen, Jinny's warm friendly learning coach. You sound like a kind older sibling — calm, encouraging, never harsh.
+  return `You are Arwen, Jinny's warm friendly learning coach. You sound like a kind older sibling - calm, encouraging, never harsh.
 
-STUDENT: Jinny, age 8, UK Year 3. She is a drummer at Trinity Rock Grade 5 — really impressive! Reads English only. Dislikes long text. Likes quick wins and encouragement.
+STUDENT: Jinny, age 8, UK Year 3. She is a drummer at Trinity Rock Grade 5 - really impressive! Reads English only. Dislikes long text. Likes quick wins and encouragement.
 
 YOUR STYLE:
 - Short sentences only. At most one emoji per message.
@@ -181,21 +168,21 @@ YOUR STYLE:
 - Keep it game-like and fun. Celebrate small wins.
 
 SESSION FLOW (follow this order strictly):
-1. "start quiz" → warm greeting, then English task immediately
-2. English → judge → hint+retry if wrong → move to Maths
-3. Maths → judge → hint+retry if wrong → move to Science
-4. Science → judge → hint+retry if wrong → move to Chinese
-5. Chinese → judge → hint+retry if wrong → move to Spanish
-6. Spanish → judge → hint+retry if wrong → offer bonus round
-7. Bonus offer: say "Brilliant work on all five! Want a bonus round? Pick one: Geography 🌍, History 📜, or Music 🥁" — wait for her choice
-8. Bonus subject → judge → hint+retry if wrong → final summary with ALL points
+1. "start quiz" -> warm greeting, then English task immediately
+2. English -> judge -> hint+retry if wrong -> move to Maths
+3. Maths -> judge -> hint+retry if wrong -> move to Science
+4. Science -> judge -> hint+retry if wrong -> move to Chinese
+5. Chinese -> judge -> hint+retry if wrong -> move to Spanish
+6. Spanish -> judge -> hint+retry if wrong -> offer bonus round
+7. Bonus offer: say "Brilliant work on all five! Want a bonus round? Pick one: Geography 🌍, History 📜, or Music 🥁" - wait for her choice
+8. Bonus subject -> judge -> hint+retry if wrong -> final summary with ALL points
 
 TASK FORMATS:
 - English: Pick one word from ENGLISH_BANK. Say: "Your word is '[word]'. Write one sentence using it." Judge generously.
 - Maths: Start with MATH_TOPICS_G3. If she answers correctly on first try, next maths question comes from MATH_TOPICS_G4 and say "Level up! 🌟". If she struggles, stay with G3.
 - Science: Pick one topic from SCIENCE_TOPICS. Make a fun A/B/C question with a curious, wonder-filled tone. Science should feel exciting and surprising!
-- Chinese: Pick one item from CHINESE_BANK. Make A/B/C choice — what does it mean? Show character + pinyin.
-- Spanish: Pick one item from SPANISH_BANK. Make A/B/C choice — what does it mean?
+- Chinese: Pick one item from CHINESE_BANK. Make A/B/C choice - what does it mean? Show character + pinyin.
+- Spanish: Pick one item from SPANISH_BANK. Make A/B/C choice - what does it mean?
 - Geography: Pick one topic from GEOGRAPHY_TOPICS. Make a fun A/B/C question.
 - History: Pick one topic from HISTORY_TOPICS. Make a fun A/B/C question with a storytelling touch.
 - Music: Pick one topic from MUSIC_TOPICS. Make A/B/C question. Drum questions are extra exciting for Jinny!
@@ -214,11 +201,11 @@ SCORING (report exact integer in points_this_turn):
 - When session_complete=true: also add streak bonus of ${Math.min(streak,7)} points (current streak: ${streak} day${streak!==1?"s":""})
 
 SPECIAL COMMANDS:
-- "pause quiz" → acknowledge warmly, say spot is saved
-- "resume quiz" → remind where she was, continue
-- "geography" / "history" / "music" → start that bonus subject immediately
-- "science" → start a science question immediately (even outside the normal flow)
-- Message with "how is / progress / report / weak" → parent mode: give clear English summary, not a quiz answer
+- "pause quiz" -> acknowledge warmly, say spot is saved
+- "resume quiz" -> remind where she was, continue
+- "geography" / "history" / "music" -> start that bonus subject immediately
+- "science" -> start a science question immediately (even outside the normal flow)
+- Message with "how is / progress / report / weak" -> parent mode: give clear English summary, not a quiz answer
 
 WORD BANKS:
 ENGLISH_BANK=${JSON.stringify(ENGLISH_BANK)}
@@ -237,10 +224,6 @@ current_subject values: greeting|english|math|science|chinese|spanish|bonus_offe
 session_complete: only true after final summary (after bonus OR if Jinny skips bonus)`;
 }
 
-// ═══════════════════════════════════════════════════
-// SUBJECT BADGE COLOURS
-// ═══════════════════════════════════════════════════
-
 const SUBJECT_META = {
   english:    { label:"English",      bg:"#E6F1FB" },
   math:       { label:"Maths",        bg:"#EAF3DE" },
@@ -250,16 +233,68 @@ const SUBJECT_META = {
   geography:  { label:"Geography 🌍", bg:"#EAF3DE" },
   history:    { label:"History 📜",   bg:"#FBEAF0" },
   music:      { label:"Music 🥁",     bg:"#EEEDFE" },
-  bonus_offer:{ label:"Bonus time!",  bg:"#F1EFE8" },
+  bonus_offer:{ label:"Bonus!",       bg:"#F1EFE8" },
   greeting:   { label:"Hi!",          bg:"#F1EFE8" },
   summary:    { label:"Done! 🎉",     bg:"#EAF3DE" },
 };
 
-// ═══════════════════════════════════════════════════
-// MAIN COMPONENT
-// ═══════════════════════════════════════════════════
+const UI = {
+  font: "var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif)",
+  bgPrimary: "var(--color-background-primary, #fff)",
+  bgSecondary: "var(--color-background-secondary, #f5f5f5)",
+  textPrimary: "var(--color-text-primary, #111)",
+  textSecondary: "var(--color-text-secondary, #888)",
+  borderSoft: "var(--color-border-secondary, #ddd)",
+  borderMute: "var(--color-border-tertiary, #e5e5e5)",
+  radiusMd: "var(--border-radius-md, 8px)",
+  radiusLg: "var(--border-radius-lg, 16px)",
+};
 
-export default function CoachApp() {
+const storageTimeout = ms => new Promise((_, reject) => {
+  setTimeout(() => reject(new Error("timeout")), ms);
+});
+
+function hasArtifactStorage() {
+  return typeof window !== "undefined" && window.storage &&
+    typeof window.storage.get === "function" &&
+    typeof window.storage.set === "function";
+}
+
+function fallbackGet(key) {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return null;
+    const value = window.localStorage.getItem(key);
+    return value == null ? null : { value };
+  } catch (error) {
+    return null;
+  }
+}
+
+function fallbackSet(key, value) {
+  try {
+    if (typeof window === "undefined" || !window.localStorage) return null;
+    window.localStorage.setItem(key, value);
+    return { value };
+  } catch (error) {
+    return null;
+  }
+}
+
+async function safeGet(key) {
+  if (hasArtifactStorage()) {
+    return Promise.race([window.storage.get(key), storageTimeout(3000)]).catch(() => fallbackGet(key));
+  }
+  return fallbackGet(key);
+}
+
+async function safeSet(key, value) {
+  if (hasArtifactStorage()) {
+    return Promise.race([window.storage.set(key, value), storageTimeout(3000)]).catch(() => fallbackSet(key, value));
+  }
+  return fallbackSet(key, value);
+}
+
+export default function ArwenGo() {
   const [msgs, setMsgs] = useState([]);
   const [apiHist, setApiHist] = useState([]);
   const [input, setInput] = useState("");
@@ -270,185 +305,340 @@ export default function CoachApp() {
   const [ready, setReady] = useState(false);
   const logRef = useRef(null);
 
-  // Load stats — checkpoint takes priority, seeds at 197 / streak 1
   useEffect(() => {
     (async () => {
-      let pts = 197, str = 1;
+      let pts = 197;
+      let str = 1;
+
       try {
-        const ck = await window.storage.get("jinny:checkpoint");
-        if (ck) { const c = JSON.parse(ck.value); pts = c.totalPoints || pts; str = c.streak || str; }
-      } catch(e) {}
-      try {
-        const r = await window.storage.get("jinny:stats");
-        if (r) {
-          const s = JSON.parse(r.value);
-          if ((s.totalPoints || 0) > pts) { pts = s.totalPoints; str = s.streak || str; }
+        const checkpoint = await safeGet("jinny:checkpoint");
+        if (checkpoint) {
+          const data = JSON.parse(checkpoint.value);
+          pts = data.totalPoints || pts;
+          str = data.streak || str;
         }
-      } catch(e) {}
-      setTotalPts(pts); setStreak(str);
+      } catch (error) {}
+
       try {
-        await window.storage.set("jinny:stats", JSON.stringify({
-          totalPoints: pts, streak: str, lastSaved: new Date().toISOString()
-        }));
-      } catch(e) {}
+        const stats = await safeGet("jinny:stats");
+        if (stats) {
+          const data = JSON.parse(stats.value);
+          if ((data.totalPoints || 0) > pts) {
+            pts = data.totalPoints;
+            str = data.streak || str;
+          }
+        }
+      } catch (error) {}
+
+      setTotalPts(pts);
+      setStreak(str);
+      await safeSet("jinny:stats", JSON.stringify({
+        totalPoints: pts,
+        streak: str,
+        lastSaved: new Date().toISOString()
+      }));
       setReady(true);
     })();
   }, []);
 
   useEffect(() => {
-    if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
+    if (logRef.current) {
+      logRef.current.scrollTop = logRef.current.scrollHeight;
+    }
   }, [msgs, loading]);
 
   async function saveStats(pts, str) {
-    try {
-      await window.storage.set("jinny:stats", JSON.stringify({
-        totalPoints: pts, streak: str, lastSaved: new Date().toISOString()
-      }));
-    } catch(e) {}
+    await safeSet("jinny:stats", JSON.stringify({
+      totalPoints: pts,
+      streak: str,
+      lastSaved: new Date().toISOString()
+    }));
   }
 
   async function send(text) {
     if (!text.trim() || loading) return;
-    const t = text.trim();
+
+    const trimmed = text.trim();
+    const nextHistory = [...apiHist, { role:"user", content:trimmed }];
+
     setInput("");
-    const newHist = [...apiHist, { role:"user", content:t }];
-    setApiHist(newHist);
-    setMsgs(m => [...m, { role:"user", text:t }]);
+    setApiHist(nextHistory);
+    setMsgs(current => [...current, { role:"user", text:trimmed }]);
     setLoading(true);
+
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
         method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify({
           model:"claude-sonnet-4-20250514",
           max_tokens:1000,
           system:buildSystemPrompt(streak),
-          messages:newHist
+          messages:nextHistory
         })
       });
-      const data = await res.json();
-      const raw = (data.content||[]).map(b=>b.text||"").join("");
-      let reply="Hmm, something went wrong. Try again!", pts=0, complete=false, subject="chat";
+
+      const data = await response.json();
+      const raw = (data.content || []).map(block => block.text || "").join("");
+      const cleaned = raw.replace(/```json|```/g, "").trim();
+
+      let reply = "Something went wrong!";
+      let earnedPts = 0;
+      let complete = false;
+      let subject = "chat";
+
       try {
-        const p = JSON.parse(raw.replace(/```json|```/g,"").trim());
-        reply=p.reply||reply; pts=Math.round(Number(p.points_this_turn)||0);
-        complete=!!p.session_complete; subject=p.current_subject||subject;
-      } catch(e) { reply=raw||reply; }
-
-      const newSP=sessionPts+pts, newTotal=totalPts+pts;
-      setSessionPts(newSP); setTotalPts(newTotal);
-      setMsgs(m=>[...m,{role:"assistant",text:reply,pts:pts>0?pts:null,subject}]);
-      setApiHist(h=>[...h,{role:"assistant",content:raw}]);
-
-      let newStreak=streak;
-      if (complete) {
-        const today=new Date().toDateString();
-        try {
-          const r=await window.storage.get("jinny:lastSession");
-          const last=r?r.value:null;
-          const yday=new Date(); yday.setDate(yday.getDate()-1);
-          if (last===yday.toDateString()) newStreak=streak+1;
-          else if (last!==today) newStreak=1;
-          setStreak(newStreak);
-          await window.storage.set("jinny:lastSession",today);
-        } catch(e) {}
-        try {
-          await window.storage.set("jinny:checkpoint", JSON.stringify({
-            totalPoints:newTotal, streak:newStreak, savedAt:new Date().toISOString()
-          }));
-        } catch(e) {}
+        const parsed = JSON.parse(cleaned);
+        reply = parsed.reply || reply;
+        earnedPts = Math.round(Number(parsed.points_this_turn) || 0);
+        complete = !!parsed.session_complete;
+        subject = parsed.current_subject || subject;
+      } catch (error) {
+        reply = raw || reply;
       }
-      await saveStats(newTotal, newStreak);
-    } catch(e) {
-      setMsgs(m=>[...m,{role:"assistant",text:"Oops! Could not connect. Error: "+e.message}]);
+
+      const newSessionPts = sessionPts + earnedPts;
+      const newTotalPts = totalPts + earnedPts;
+
+      setSessionPts(newSessionPts);
+      setTotalPts(newTotalPts);
+      setMsgs(current => [
+        ...current,
+        { role:"assistant", text:reply, pts:earnedPts > 0 ? earnedPts : null, subject }
+      ]);
+      setApiHist(current => [...current, { role:"assistant", content:raw }]);
+
+      let newStreak = streak;
+      if (complete) {
+        const today = new Date().toDateString();
+        try {
+          const lastSession = await safeGet("jinny:lastSession");
+          const last = lastSession ? lastSession.value : null;
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+
+          if (last === yesterday.toDateString()) {
+            newStreak = streak + 1;
+          } else if (last !== today) {
+            newStreak = 1;
+          }
+
+          setStreak(newStreak);
+          await safeSet("jinny:lastSession", today);
+        } catch (error) {}
+
+        await safeSet("jinny:checkpoint", JSON.stringify({
+          totalPoints:newTotalPts,
+          streak:newStreak,
+          savedAt:new Date().toISOString()
+        }));
+      }
+
+      await saveStats(newTotalPts, newStreak);
+    } catch (error) {
+      setMsgs(current => [
+        ...current,
+        { role:"assistant", text:`Oops! ${error.message}` }
+      ]);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
-  const SubjectBadge = ({s}) => {
-    const meta = SUBJECT_META[s];
+  const SubjectBadge = ({ subject }) => {
+    const meta = SUBJECT_META[subject];
     if (!meta) return null;
-    return <span style={{display:"inline-block",fontSize:11,padding:"2px 8px",borderRadius:99,background:meta.bg,color:"var(--color-text-secondary)",marginBottom:4}}>{meta.label}</span>;
+
+    return (
+      <span style={{
+        display:"inline-block",
+        fontSize:11,
+        padding:"2px 8px",
+        borderRadius:99,
+        background:meta.bg,
+        color:UI.textSecondary,
+        marginBottom:4
+      }}>
+        {meta.label}
+      </span>
+    );
   };
 
-  const qBtn = (label, cmd) => (
-    <button key={cmd} onClick={()=>send(cmd)} disabled={loading} style={{
-      fontSize:13,padding:"6px 12px",borderRadius:"var(--border-radius-md)",
-      border:"0.5px solid var(--color-border-secondary)",
-      background:"var(--color-background-primary)",color:"var(--color-text-primary)",
-      cursor:"pointer",opacity:loading?0.5:1,whiteSpace:"nowrap"
-    }}>{label}</button>
+  const QuickButton = ({ label, cmd }) => (
+    <button
+      onClick={() => send(cmd)}
+      disabled={loading}
+      style={{
+        fontSize:13,
+        padding:"6px 12px",
+        borderRadius:UI.radiusMd,
+        border:`0.5px solid ${UI.borderSoft}`,
+        background:UI.bgPrimary,
+        color:UI.textPrimary,
+        cursor:"pointer",
+        opacity:loading ? 0.5 : 1,
+        whiteSpace:"nowrap"
+      }}
+    >
+      {label}
+    </button>
   );
 
   return (
-    <div style={{fontFamily:"var(--font-sans)",maxWidth:580,margin:"0 auto",padding:"1rem"}}>
+    <div style={{ fontFamily:UI.font, maxWidth:560, margin:"0 auto", padding:"1rem" }}>
       <h2 className="sr-only">Jinny's learning coach</h2>
 
-      {/* Score bar */}
-      <div style={{display:"flex",alignItems:"center",gap:16,padding:"10px 16px",background:"var(--color-background-secondary)",border:"0.5px solid var(--color-border-tertiary)",borderRadius:"var(--border-radius-md)",marginBottom:12}}>
-        <span style={{fontSize:20}}>⭐</span>
-        <div>
-          <div style={{fontSize:22,fontWeight:500,color:"var(--color-text-primary)",lineHeight:1}}>{ready?totalPts:"…"}</div>
-          <div style={{fontSize:11,color:"var(--color-text-secondary)"}}>total points</div>
-        </div>
-        <div style={{width:"0.5px",height:32,background:"var(--color-border-tertiary)"}}/>
-        <div>
-          <div style={{fontSize:22,fontWeight:500,color:"var(--color-text-primary)",lineHeight:1}}>{ready?streak:"…"}</div>
-          <div style={{fontSize:11,color:"var(--color-text-secondary)"}}>day streak 🔥</div>
-        </div>
-        {sessionPts>0 && <div style={{marginLeft:"auto",fontSize:13,fontWeight:500,color:"#185FA5"}}>+{sessionPts} today</div>}
+      <div style={{ display:"flex", alignItems:"baseline", gap:8, marginBottom:12 }}>
+        <h1 style={{ margin:0, fontSize:22, fontWeight:700, letterSpacing:"-0.5px", color:UI.textPrimary }}>
+          ArwenGo
+        </h1>
+        <span style={{ fontSize:12, color:UI.textSecondary }}>Jinny's learning coach</span>
       </div>
 
-      {/* Chat log */}
-      <div ref={logRef} style={{display:"flex",flexDirection:"column",gap:10,minHeight:260,maxHeight:420,overflowY:"auto",marginBottom:10,padding:"4px 0"}}>
-        {msgs.length===0 && (
-          <div style={{color:"var(--color-text-secondary)",fontSize:14,padding:"3rem 0",textAlign:"center"}}>
+      <div style={{
+        display:"flex",
+        alignItems:"center",
+        gap:16,
+        padding:"10px 16px",
+        background:UI.bgSecondary,
+        border:`0.5px solid ${UI.borderMute}`,
+        borderRadius:UI.radiusMd,
+        marginBottom:12
+      }}>
+        <span style={{ fontSize:20 }}>⭐</span>
+        <div>
+          <div style={{ fontSize:22, fontWeight:600, color:UI.textPrimary, lineHeight:1 }}>
+            {ready ? totalPts : "..."}
+          </div>
+          <div style={{ fontSize:11, color:UI.textSecondary }}>total points</div>
+        </div>
+        <div style={{ width:"0.5px", height:32, background:UI.borderMute }} />
+        <div>
+          <div style={{ fontSize:22, fontWeight:600, color:UI.textPrimary, lineHeight:1 }}>
+            {ready ? streak : "..."}
+          </div>
+          <div style={{ fontSize:11, color:UI.textSecondary }}>day streak 🔥</div>
+        </div>
+        {sessionPts > 0 && (
+          <div style={{ marginLeft:"auto", fontSize:13, fontWeight:600, color:"#185FA5" }}>
+            +{sessionPts} today
+          </div>
+        )}
+      </div>
+
+      <div
+        ref={logRef}
+        style={{
+          display:"flex",
+          flexDirection:"column",
+          gap:10,
+          minHeight:260,
+          maxHeight:400,
+          overflowY:"auto",
+          marginBottom:10,
+          padding:"4px 0"
+        }}
+      >
+        {msgs.length === 0 && (
+          <div style={{ color:UI.textSecondary, fontSize:14, padding:"3rem 0", textAlign:"center" }}>
             Hit <strong>Start quiz</strong> to begin! 👋
           </div>
         )}
-        {msgs.map((m,i)=>(
-          <div key={i} style={{display:"flex",flexDirection:"column",alignItems:m.role==="user"?"flex-end":"flex-start"}}>
-            {m.role==="assistant"&&m.subject&&<SubjectBadge s={m.subject}/>}
+
+        {msgs.map((message, index) => (
+          <div
+            key={index}
+            style={{
+              display:"flex",
+              flexDirection:"column",
+              alignItems:message.role === "user" ? "flex-end" : "flex-start"
+            }}
+          >
+            {message.role === "assistant" && message.subject && (
+              <SubjectBadge subject={message.subject} />
+            )}
             <div style={{
-              padding:"10px 14px",borderRadius:"var(--border-radius-lg)",maxWidth:"88%",
-              fontSize:15,lineHeight:1.65,whiteSpace:"pre-wrap",
-              background:m.role==="user"?"#E6F1FB":"var(--color-background-secondary)",
-              color:m.role==="user"?"#0C447C":"var(--color-text-primary)",
-              border:m.role==="user"?"none":"0.5px solid var(--color-border-tertiary)"
-            }}>{m.text}</div>
-            {m.pts&&<div style={{fontSize:12,color:"#3B6D11",fontWeight:500,marginTop:2,padding:"0 4px"}}>+{m.pts} pts ✓</div>}
+              padding:"10px 14px",
+              borderRadius:UI.radiusLg,
+              maxWidth:"88%",
+              fontSize:15,
+              lineHeight:1.65,
+              whiteSpace:"pre-wrap",
+              background:message.role === "user" ? "#E6F1FB" : UI.bgPrimary,
+              color:message.role === "user" ? "#0C447C" : UI.textPrimary,
+              border:message.role === "user" ? "none" : `0.5px solid ${UI.borderMute}`
+            }}>
+              {message.text}
+            </div>
+            {message.pts && (
+              <div style={{ fontSize:12, color:"#3B6D11", fontWeight:600, marginTop:2, padding:"0 4px" }}>
+                +{message.pts} pts ✓
+              </div>
+            )}
           </div>
         ))}
-        {loading&&<div style={{alignSelf:"flex-start",padding:"10px 14px",background:"var(--color-background-secondary)",border:"0.5px solid var(--color-border-tertiary)",borderRadius:"var(--border-radius-lg)",color:"var(--color-text-secondary)",fontSize:15}}>...</div>}
+
+        {loading && (
+          <div style={{
+            alignSelf:"flex-start",
+            padding:"10px 14px",
+            background:UI.bgSecondary,
+            border:`0.5px solid ${UI.borderMute}`,
+            borderRadius:UI.radiusLg,
+            color:UI.textSecondary,
+            fontSize:15
+          }}>
+            ...
+          </div>
+        )}
       </div>
 
-      {/* Buttons — two rows */}
-      <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:6}}>
-        {qBtn("Start quiz ▶","start quiz")}
-        {qBtn("Pause","pause quiz")}
-        {qBtn("Resume","resume quiz")}
-        {qBtn("Science 🔬","science")}
+      <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:6 }}>
+        <QuickButton label="Start quiz ▶" cmd="start quiz" />
+        <QuickButton label="Pause" cmd="pause quiz" />
+        <QuickButton label="Resume" cmd="resume quiz" />
+        <QuickButton label="Science 🔬" cmd="science" />
       </div>
-      <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:8}}>
-        {qBtn("Geography 🌍","geography")}
-        {qBtn("History 📜","history")}
-        {qBtn("Music 🥁","music")}
+      <div style={{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:8 }}>
+        <QuickButton label="Geography 🌍" cmd="geography" />
+        <QuickButton label="History 📜" cmd="history" />
+        <QuickButton label="Music 🥁" cmd="music" />
       </div>
 
-      {/* Input */}
-      <div style={{display:"flex",gap:8}}>
-        <input value={input} onChange={e=>setInput(e.target.value)}
-          onKeyDown={e=>e.key==="Enter"&&send(input)}
-          placeholder="Type your answer here..." disabled={loading}
-          style={{flex:1,padding:"10px 14px",borderRadius:"var(--border-radius-md)",border:"0.5px solid var(--color-border-secondary)",background:"var(--color-background-primary)",color:"var(--color-text-primary)",fontSize:15}}
+      <div style={{ display:"flex", gap:8 }}>
+        <input
+          value={input}
+          onChange={event => setInput(event.target.value)}
+          onKeyDown={event => event.key === "Enter" && send(input)}
+          placeholder="Type your answer here..."
+          disabled={loading}
+          style={{
+            flex:1,
+            padding:"10px 14px",
+            borderRadius:UI.radiusMd,
+            border:`0.5px solid ${UI.borderSoft}`,
+            background:UI.bgPrimary,
+            color:UI.textPrimary,
+            fontSize:15
+          }}
         />
-        <button onClick={()=>send(input)} disabled={loading||!input.trim()} style={{
-          padding:"10px 20px",borderRadius:"var(--border-radius-md)",
-          border:"0.5px solid var(--color-border-secondary)",
-          background:"var(--color-background-primary)",color:"var(--color-text-primary)",
-          fontSize:15,cursor:"pointer",fontWeight:500,
-          opacity:(loading||!input.trim())?0.4:1
-        }}>Send ↗</button>
+        <button
+          onClick={() => send(input)}
+          disabled={loading || !input.trim()}
+          style={{
+            padding:"10px 18px",
+            borderRadius:UI.radiusMd,
+            border:`0.5px solid ${UI.borderSoft}`,
+            background:UI.bgPrimary,
+            color:UI.textPrimary,
+            fontSize:15,
+            fontWeight:600,
+            cursor:"pointer",
+            opacity:(loading || !input.trim()) ? 0.4 : 1
+          }}
+        >
+          Send ↗
+        </button>
       </div>
     </div>
   );
